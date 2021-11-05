@@ -7,11 +7,12 @@
   <button id="add-new-place" type="submit">Add</button>
 </form>
 
+<!-- loop through places 'div' and add places. visted or not visited -->
 {% for place in places %}
 
 <div class="wishlist-place">
-  <span id="place-name-{{ place.pk }}" class="place-name"
-    >{{ place.name }}</span
+  <span id="place-name-{{ place.pk }}" class="place-name">
+    {{ place.name }}</span
   >
 
   <form

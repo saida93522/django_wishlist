@@ -1,15 +1,26 @@
 {% load static %}
-<html lang="en">
+<!DOCTYPE html>
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Travel Wish List</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}" type="text/css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/sakura.css/css/sakura.css"
+      type="text/css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href=" {% static '/css/style.css' %}"
+      type="text/css"
+    />
   </head>
   <!-- the main wrapper for all templates -->
   <body>
     <!-- specify where to add all child templates -->
-    {% include 'navbar.html'%}
     <h1>Where do you want to go?</h1>
 
     {% block content %} {% endblock content %}

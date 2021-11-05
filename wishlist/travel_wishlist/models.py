@@ -9,6 +9,7 @@ class Place(models.Model):
     # fields
     name = models.CharField(max_length=200)
     visited = models.BooleanField(default=False)
-    
+    objects = models.Manager()
+    #django automatically creates pk
     def __str__(self):
         return f'{self.name}: visited? {self.visited}' 

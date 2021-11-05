@@ -1,22 +1,33 @@
 """ views is the ui of the app. gets the data needed to satisfy requests via models.py 
-and renders data to the user via template(text file.eg HTML)."""
+and renders data to the user via template(text file.eg HTML).
+This view module fetches the list of not-visited places from the database"""
+
+
 from django.shortcuts import render,redirect,get_object_or_404
 from .models import Place
+from .forms import NewPlaceForm
 # Create your views here.
 def place_list(request):
-    """ :param: request is the http object 
-    :returns: the wishlist """
+    """ :param: request, the http object, what the user is requesting. 
+    :returns: place list. """
     if request.method == 'POST':
-        form = NewPlaceForm(request.POST)
-        place = form.save()     # Create a new Place from the form
-        if form.is_valid():     # Checks against DB constraints, for example, are required fields present? 
+        #create a new place to add to list
+        form = NewPlaceForm(request.POST) #create form from the data in the request
+        place = form.save()     
+        if form.is_valid(): #verify it meets db constraint
             place.save()        # Saves to the database 
-            return redirect('place_list')    # redirects to GET view with name place_list - which is this same view 
-        
+            return redirect('place_list')    # redirects to home page 
     
-    places = Place.objects.filter(visited=False).order_by('name') #orm
-    new_place_form = NewPlaceForm()
+    
+    places = Place.objects.filter(visited=False).order_by('name') # sort visited by name
+    new_place_form = NewPlaceForm() #creates html form
     return render(request, 'wishlist.html', {'places':places, 'new_place_form':new_place_form})
+
+
+def about(request):
+    author = 'Saida'
+    about = 'A website to create list of places to visit'
+    return render(request, 'about.html',{'author': author, 'about':about}) #about  page.
 
 def places_visited(request):
     """ :param: request is the http object 
