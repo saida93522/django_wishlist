@@ -9,5 +9,5 @@ urlpatterns = [
     path('',views.place_list, name="place_list"),#can reference specific url by its name
     path('about', views.about, name="about"),
     path('visited', views.places_visited, name="places_visited"),
-    path('place/<int:place_pk>/was_visited/', views.place_was_visited, name='place_was_visited')
+    path('place/<int:place_pk>/was_visited/', views.place_was_visited, name='place_was_visited') #pk url patternn for POST request matches place/3 or place/2
 ]

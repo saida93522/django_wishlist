@@ -21,7 +21,7 @@ def place_list(request):
     
     places = Place.objects.filter(visited=False).order_by('name') # sort visited by name
     new_place_form = NewPlaceForm() #creates html form
-    return render(request, 'wishlist.html', {'places':places, 'new_place_form':new_place_form})
+    return render(request, 'wishlist/wishlist.html', {'places':places, 'new_place_form':new_place_form})
 
 
 def about(request):
@@ -30,15 +30,16 @@ def about(request):
     return render(request, 'about.html',{'author': author, 'about':about}) #about  page.
 
 def places_visited(request):
-    """ :param: request is the http object 
+    """ :param: request is user requesting list of places visited.
     :returns: the wishlist """
     visited = Place.objects.filter(visited=True)
-    return render(request,'visited.html',{'visited':visited})
+    return render(request,'wishlist/visited.html',{'visited':visited})
     
 def place_was_visited(request, place_pk):
+    """ :param: request object for a place that was visited.
+        :param: place_pk matches page number user visited """
     if request.method == 'POST':
-        place = get_object_or_404(Place, pk=place_pk)
+        place = get_object_or_404(Place, pk=place_pk) #if object not found return 404 response 
         place.visited = True 
         place.save()
-    
-    return redirect('place_list')
+    return redirect('place_list') #redirect to place list
