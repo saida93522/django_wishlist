@@ -59,3 +59,11 @@ class TestAddNewPlace(TestCase):
         response = self.client.post(add_place_url, new_place_data, follow=True)
         # Check correct template was used
         self.assertTemplateUsed(response, 'travel_wishlist/wishlist.html')
+
+        #check used response
+        response_places = response.context['places']
+        self.assertEqual(1, len(response_places))
+        tokyo_response = response_places[0]
+
+        #check same data as the db
+        tokyo_in_database = Place.objects.get(name='Tokyo', visited=False)
