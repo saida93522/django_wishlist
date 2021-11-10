@@ -1,4 +1,4 @@
-{% extends 'wishlist/home.html' %} {% block content %}
+{% extends 'place_wishlist/home.html' %} {% block content %}
 
 <h2>Travel Wishlist</h2>
 
@@ -21,7 +21,7 @@
     action="{% url 'place_was_visited' place.pk %}"
   >
     {% csrf_token %}
-    <!--protects against cross-site request forgery -->
+    <!--middleware and template tag that protects against cross-site request forgery -->
     <button id="visited-button-{{ place.pk }}" type="submit">Visited!</button>
   </form>
 </div>

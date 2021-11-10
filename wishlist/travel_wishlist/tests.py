@@ -5,29 +5,19 @@ from .models import Place
 
 # Create your tests here.
 class TestHomePage(TestCase):
-
-    
-    def test_load_home_page_shows_empty_list_for_empty_database(self):
+    def test_load_home_page_shows_empty_list_message_for_empty_database(self):
         home_page_url = reverse('place_list') #look by name instead of url
         response = self.client.get(home_page_url)
-        self.assertTemplateUsed(response, 'wishlist/wishlist.html')
+        self.assertTemplateUsed(response, 'place_wishlist/wishlist.html')
         self.assertContains(response, 'You have no places in your wishlist.')
 
-class TestVisitedPage(TestCase):
-
-    def test_visited_page_shows_empty_list_message_for_empty_database(self):
-        response = self.client.get(reverse('places_visited'))
-        self.assertTemplateUsed(response, 'travel_wishlist/visited.html')
-        self.assertContains(response, 'You have not visited any places yet')
-
-
 class TestWishList(TestCase):
-
+    """loads test_places fixtures for testing. """
     fixtures = ['test_places']
 
     def test_viewing_wishlist_contains_not_visited_places(self):
         response = self.client.get(reverse('place_list'))
-        self.assertTemplateUsed(response, 'travel_wishlist/wishlist.html')
+        self.assertTemplateUsed(response, 'place_wishlist/wishlist.html')
         
         self.assertContains(response, 'Tokyo')
         self.assertContains(response, 'New York')
@@ -35,13 +25,20 @@ class TestWishList(TestCase):
         self.assertNotContains(response, 'Moab')
 
 
+
+class TestVisitedPage(TestCase):
+    def test_visited_page_shows_empty_list_message_for_empty_database(self):
+        response = self.client.get(reverse('places_visited'))
+        self.assertTemplateUsed(response, 'place_wishlist/visited.html')
+        self.assertContains(response,'You have not visited any places yet.')
+
+
 class TestVisitedList(TestCase):
-
     fixtures = ['test_places']
-
+    
     def test_viewing_places_visited_shows_visited_places(self):
         response = self.client.get(reverse('places_visited'))
-        self.assertTemplateUsed(response, 'travel_wishlist/visited.html')
+        self.assertTemplateUsed(response, 'place_wishlist/visited.html')
 
         self.assertNotContains(response, 'Tokyo')
         self.assertNotContains(response, 'New York')
@@ -52,18 +49,24 @@ class TestVisitedList(TestCase):
 class TestAddNewPlace(TestCase):
 
     def test_add_new_unvisited_place_to_wishlist(self):
-
-        add_place_url = reverse('place_list')
+        add_place_url = reverse('place_list') #send url data to place_list in views
         new_place_data = {'name': 'Tokyo', 'visited': False }
 
-        response = self.client.post(add_place_url, new_place_data, follow=True)
+        response = self.client.post(add_place_url, new_place_data, follow=True) #create post req data
+        
         # Check correct template was used
-        self.assertTemplateUsed(response, 'travel_wishlist/wishlist.html')
+        self.assertTemplateUsed(response, 'wishlist/wishlist.html')
 
         #check used response
         response_places = response.context['places']
         self.assertEqual(1, len(response_places))
-        tokyo_response = response_places[0]
+        tokyo_from_res = response_places[0]
 
         #check same data as the db
         tokyo_in_database = Place.objects.get(name='Tokyo', visited=False)
+        self.assertEqual(tokyo_in_database, tokyo_from_res)
+
+        self.assertEqual(tokyo_in_database,tokyo_from_res)
+
+class TestVisitPlace(TestCase):
+    pass
