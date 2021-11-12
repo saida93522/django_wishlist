@@ -10,19 +10,17 @@ from .forms import NewPlaceForm
 def place_list(request):
     """ :param: request, the http object, what the user is requesting. 
     :returns: place list. """
-    
+    form = NewPlaceForm()
     if request.method == 'POST':
         #create a new place to add to list
         form = NewPlaceForm(request.POST) #create form from the data in the request
-        place = form.save()     
         if form.is_valid(): #verify it meets db constraint
-            place.save()        # Saves to the database 
+            form.save()        # Saves to the database 
             return redirect('place_list')    # redirects to home page 
-    
-    
     places = Place.objects.filter(visited=False).order_by('name') # sort visited by name
     new_place_form = NewPlaceForm() #creates html form
-    return render(request, 'place_wishlist/wishlist.html', {'places':places, 'new_place_form':new_place_form})
+    context = {'places':places, 'new_place_form':new_place_form}
+    return render(request, 'place_wishlist/wishlist.html',context)
 
 
 def about(request):

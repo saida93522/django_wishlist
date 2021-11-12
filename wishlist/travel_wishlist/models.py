@@ -12,4 +12,4 @@ class Place(models.Model): #place table
     objects = models.Manager() # provides interface between db query operations and the django model.
     
     def __str__(self):
-        return f'{self.name}: visited? {self.visited}' 
+        return f'{self.name}, visited? {self.visited}' 
