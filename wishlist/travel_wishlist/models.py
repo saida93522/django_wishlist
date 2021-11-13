@@ -15,7 +15,7 @@ class Place(models.Model): #place table
     photo = models.ImageField(upload_to='user_images/', blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        """ create or update place object. """
+        """ create or update existing place object. """
         old_place = Place.objects.filter(pk=self.pk).first()
         if old_place and old_place.photo:
             if old_place.photo != self.photo:
@@ -23,10 +23,12 @@ class Place(models.Model): #place table
         super().save(*args, **kwargs)
         
     def delete_photo(self, photo):
+        """remove photo from place object. """
         if default_storage.exists(photo.name):
             default_storage.delete(photo.name)
 
     def delete(self,  *args, **kwargs):
+        """remove photo from place object and from media file."""
         if self.photo:
             self.delete_photo(self.photo)
             

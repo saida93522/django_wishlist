@@ -82,14 +82,14 @@ def place_details(request,place_pk):
         return redirect('place_details',place_pk =place_pk)
 
     
-    #otherwise show place info and optional form.
+    #otherwise show place details and optional form.
     else:    
         if place.visited:
             review_form = TripReviewForm(instance=place)  # Pre-populate with data from this Place instance
             return render(request, 'place_wishlist/place_detail.html', {'place': place, 'review_form': review_form} )
 
         
-        #dont show review form if not get req
+        #dont show review form if not a GET req
         else:
             return render(request, 'place_wishlist/place_detail.html', {'place': place} )
 
