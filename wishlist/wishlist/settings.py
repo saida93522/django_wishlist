@@ -18,11 +18,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-41ao-@vs2savttvwjk#ntr%(qrnjt572lded(6q--m1al6bhvs'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
-
+LOGIN_URL = '/admin'
 # Application definition
 
 INSTALLED_APPS = [
@@ -53,7 +53,7 @@ INTERNAL_IPS = [
     '127.0.0.1',
 ]
 def show_toolbar(request):                                     
-    return True                                                
+    return False                                                
 
 DEBUG_TOOLBAR_CONFIG = {                                       
     "SHOW_TOOLBAR_CALLBACK" : show_toolbar,                    
@@ -88,13 +88,27 @@ WSGI_APPLICATION = 'wishlist.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'places',
+        'USER': 'traveler',
+        'PASSWORD':os.getenv('TRAVELER_PW'),
+        'HOST':'/cloudsql/wishlist-332314:us-central1:wishlist-db',
+        'PORT':'5432',
     }
 }
 
+# check if running on app engine
+if not os.getenv('GAE_INSTANCE'):
+    DATABASES['default']['HOST'] = '127.0.0.1'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -132,11 +146,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+# Specify a location to copy static files to when running python manage.py collectstatic
+STATIC_ROOT = os.path.join(BASE_DIR, 'www', 'static')
+
 
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+GS_STATIC_FILE_BUCKET = 'wishlist-332314.appspot.com'
+STATIC_URL = f'https://storage.cloud.google.com/{GS_STATIC_FILE_BUCKET}/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
