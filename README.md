@@ -28,4 +28,4 @@ Based on the provided data:
 
 ## Screenshots
 
-![App Screenshot](travelapp.png)
+![App Screenshot](wishlist/travelapp.png)
