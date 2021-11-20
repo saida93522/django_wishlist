@@ -5,6 +5,11 @@ from django.core.files.storage import default_storage
 """ models(object) holds data in ORM. defines the logical structure behind the entire app.
 using CRUD,creates place table that stores user's name and the places user visited or wants to visit """
 
+class CatFacts(models.Model):
+    fact = models.CharField(max_length=500)
+
+    def __str__(self):
+        return self.fact
 
 class Place(models.Model): #place table
     user = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
@@ -39,3 +44,6 @@ class Place(models.Model): #place table
     def __str__(self):
         photo_str = self.photo if self.photo else 'No Photo Found'
         return f'{self.name}, visited? {self.visited} on {self.date_visited}. Photo {photo_str}'
+
+
+     

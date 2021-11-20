@@ -18,7 +18,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-41ao-@vs2savttvwjk#ntr%(qrnjt572lded(6q--m1al6bhvs'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+if os.getenv('GAE_INSTANCE'):
+    DEBUG = False
+else:
+    DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -53,7 +56,7 @@ INTERNAL_IPS = [
     '127.0.0.1',
 ]
 def show_toolbar(request):                                     
-    return False                                                
+    return True                                                
 
 DEBUG_TOOLBAR_CONFIG = {                                       
     "SHOW_TOOLBAR_CALLBACK" : show_toolbar,                    
@@ -88,12 +91,6 @@ WSGI_APPLICATION = 'wishlist.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 DATABASES = {
     'default': {
@@ -108,7 +105,12 @@ DATABASES = {
 
 # check if running on app engine
 if not os.getenv('GAE_INSTANCE'):
-    DATABASES['default']['HOST'] = '127.0.0.1'
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -148,16 +150,31 @@ USE_TZ = True
 
 # Specify a location to copy static files to when running python manage.py collectstatic
 STATIC_ROOT = os.path.join(BASE_DIR, 'www', 'static')
-
-
-MEDIA_URL = '/media/'
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-GS_STATIC_FILE_BUCKET = 'wishlist-332314.appspot.com'
-STATIC_URL = f'https://storage.cloud.google.com/{GS_STATIC_FILE_BUCKET}/static/'
 
+
+if os.getenv('GAE_INSTANCE'):
+    GS_STATIC_FILE_BUCKET = 'wishlist-332314.appspot.com'
+
+    STATIC_URL = f'https://storage.cloud.google.com/{GS_STATIC_FILE_BUCKET}/static/'
+
+    DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+    GS_BUCKET_NAME = 'user-added-images'
+    MEDIA_URL = f'https://storage.cloud.google.com/{GS_BUCKET_NAME}/media/'
+
+    import google.oauth2
+    from google.oauth2 import service_account
+    GS_CREDENTIALS = service_account.Credentials.from_service_account_file('travel_credentials.json')
+else:
+    STATIC_URL = 'travel_wishlist/static/'
+
+    # mediaroot
+    MEDIA_URL = '/media/'
+
+
+ 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

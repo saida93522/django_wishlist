@@ -4,9 +4,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+cloud_sql_proxy
+travel_credentials.json
 
 .DS_Store
-
 
 # Environments
 .env
@@ -70,4 +71,4 @@ instance/
 /site
 
 
-cloud_sql_proxy
+
